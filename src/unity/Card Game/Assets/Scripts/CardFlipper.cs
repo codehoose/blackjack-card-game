@@ -45,12 +45,12 @@ public class CardFlipper : MonoBehaviour
 
         if (cardIndex == -1)
         {
-            model.ToggleFace(false);
+            model.ToggleFaceNoAnimation(false);
         }
         else
         {
             model.cardIndex = cardIndex;
-            model.ToggleFace(true);
+            model.ToggleFaceNoAnimation(true);
         }
     }
 }

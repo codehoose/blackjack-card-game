@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(CardStack))]
@@ -45,7 +44,7 @@ public class CardStackView : MonoBehaviour
     {
         float co = cardOffset * deck.CardCount;
         Vector3 temp = start + new Vector3(co, 0f);
-        AddCard(temp, e.CardIndex, deck.CardCount);
+        AddCard(temp, e.CardIndex, deck.CardCount, true);
     }
 
     void deck_CardRemoved(object sender, CardEventArgs e)
@@ -78,14 +77,24 @@ public class CardStackView : MonoBehaviour
         }
     }
 
-    void AddCard(Vector3 position, int cardIndex, int positionalIndex)
+    void AddCard(Vector3 position,
+                 int cardIndex,
+                 int positionalIndex,
+                 bool doAnimation = false)
     {
         if (fetchedCards.ContainsKey(cardIndex))
         {
             if (!faceUp)
             {
                 CardModel model = fetchedCards[cardIndex].Card.GetComponent<CardModel>();
-                model.ToggleFace(fetchedCards[cardIndex].IsFaceUp);
+                if (doAnimation)
+                {
+                    model.ToggleFace(fetchedCards[cardIndex].IsFaceUp);
+                }
+                else
+                {
+                    model.ToggleFaceNoAnimation(fetchedCards[cardIndex].IsFaceUp);
+                }
             }
             return;
         }
@@ -95,7 +104,14 @@ public class CardStackView : MonoBehaviour
 
         CardModel cardModel = cardCopy.GetComponent<CardModel>();
         cardModel.cardIndex = cardIndex;
-        cardModel.ToggleFace(faceUp);
+        if (doAnimation)
+        {
+            cardModel.ToggleFace(faceUp);
+        }
+        else
+        {
+            cardModel.ToggleFaceNoAnimation(faceUp);
+        }
 
         SpriteRenderer spriteRenderer = cardCopy.GetComponent<SpriteRenderer>();
         if (reverseLayerOrder)
